@@ -1,0 +1,13 @@
+Animações do plugin (GIF, tocadas pelo próprio deck)
+
+  t_single.gif / ct_single.gif         tela do seu lado, 1 tecla (196 x 196)
+  t_left.gif / t_right.gif             TR, tecla larga (metades esquerda e direita)
+  ct_left.gif / ct_right.gif           CT, tecla larga
+  boom_single|left|right.gif           explosão
+  defuse_single|left|right.gif         bomba defusada
+
+Todos são gerados por tools/gerar-animacoes.mjs a partir de plugin/art.js.
+Para trocar por arte própria, substitua o arquivo mantendo o nome e o tamanho
+196 x 196. Na tecla larga, faça a animação em 392 x 196 e corte em duas
+metades com o mesmo número de quadros, para elas ficarem no mesmo ritmo.
+Depois de trocar arquivos, espere uns 5 segundos.

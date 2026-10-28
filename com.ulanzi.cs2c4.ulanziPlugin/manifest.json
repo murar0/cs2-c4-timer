@@ -1,0 +1,38 @@
+{
+  "Author": "Felipe Muraro",
+  "Name": "CS2 C4 Timer",
+  "Description": "Mostra o tempo da C4 do Counter-Strike 2 na tecla, com cores para defuse com e sem kit.",
+  "Icon": "assets/icons/plugin.svg",
+  "Version": "1.3.0",
+  "Category": "CS2 C4 Timer",
+  "CategoryIcon": "assets/icons/category.svg",
+  "CodePath": "plugin/app.js",
+  "Type": "JavaScript",
+  "Inspect": "--inspect=127.0.0.1:9231",
+  "PrivateAPI": true,
+  "UUID": "com.ulanzi.ulanzistudio.cs2c4",
+  "Actions": [
+    {
+      "Name": "Timer da C4",
+      "Icon": "assets/icons/action.svg",
+      "PropertyInspectorPath": "property-inspector/timer/inspector.html",
+      "state": 0,
+      "States": [
+        { "Name": "Aguardando", "Image": "assets/icons/key-idle.png" }
+      ],
+      "Tooltip": "Cronômetro da C4 integrado ao CS2",
+      "UUID": "com.ulanzi.ulanzistudio.cs2c4.timer",
+      "SupportedInMultiActions": false,
+      "DisableAutomaticStates": true,
+      "Controllers": ["Keypad"],
+      "Devices": []
+    }
+  ],
+  "OS": [
+    { "Platform": "windows", "MinimumVersion": "10" },
+    { "Platform": "mac", "MinimumVersion": "10.11" }
+  ],
+  "Software": {
+    "MinVersion": "2.1.0"
+  }
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+  <title>CS2 C4 Timer</title>
+  <link rel="stylesheet" href="../../libs/css/uspi.css">
+  <style>
+    .c4-status { margin: 6px 0 10px; padding: 8px 10px; border-radius: 6px; background: rgba(255,255,255,0.06); font-size: 12px; line-height: 1.6; }
+    .c4-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: #6b7280; vertical-align: middle; }
+    .c4-dot.on { background: #22c55e; }
+    .c4-dot.err { background: #ef4444; }
+    .c4-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+    .c4-buttons button { flex: 1 1 45%; padding: 6px 8px; border: 0; border-radius: 5px; background: #3b82f6; color: #fff; cursor: pointer; font-size: 12px; }
+    .c4-buttons button.sec { background: rgba(255,255,255,0.12); }
+    .c4-msg { font-size: 11px; opacity: 0.85; word-break: break-all; white-space: pre-wrap; }
+    .c4-hint { font-size: 11px; opacity: 0.6; margin: 2px 0 8px; }
+    textarea.c4-cfg { width: 100%; height: 160px; font-family: Consolas, monospace; font-size: 11px; background: #111; color: #ddd; border: 0; border-radius: 5px; padding: 6px; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <div class="uspi-wrapper hidden">
+
+    <div class="c4-status">
+      <div><span id="dotServer" class="c4-dot"></span><span id="txtServer">Servidor: aguardando</span></div>
+      <div><span id="dotGame" class="c4-dot"></span><span id="txtGame">CS2: sem dados ainda</span></div>
+      <div id="txtRound" class="c4-msg"></div>
+    </div>
+
+    <div class="c4-buttons">
+      <button type="button" id="btnInstall">Instalar no CS2</button>
+      <button type="button" id="btnDemo" class="sec">Simular plant (40s)</button>
+      <button type="button" id="btnCfg" class="sec">Ver arquivo .cfg</button>
+      <button type="button" id="btnMeteor" class="sec">Ver estrela cadente</button>
+    </div>
+    <div id="installMsg" class="c4-msg"></div>
+    <textarea id="cfgText" class="c4-cfg hidden" readonly></textarea>
+
+    <form id="property-inspector">
+
+      <div class="uspi-item">
+        <div class="uspi-item-label">Layout</div>
+        <select class="uspi-item-value select" name="layout">
+          <option value="auto">Automático</option>
+          <option value="single">Sempre 1 tecla</option>
+          <option value="left">Tecla larga: metade esquerda</option>
+          <option value="right">Tecla larga: metade direita</option>
+        </select>
+      </div>
+      <div class="c4-hint">No automático, basta colocar esta ação em 2 teclas vizinhas na mesma linha: elas viram uma tecla larga sozinhas. Uma tecla sozinha mostra tudo nela mesma.</div>
+
+      <div class="uspi-item">
+        <div class="uspi-item-label">Margem (s)</div>
+        <input class="uspi-item-value" type="number" name="marginSec" min="0" max="3" step="0.1" value="0.3">
+      </div>
+      <div class="c4-hint">Antecipa a troca de cor. Com 0.3, a tela fica vermelha com 5.3s em vez de 5.0s.</div>
+
+      <div class="uspi-item">
+        <div class="uspi-item-label">Correção (s)</div>
+        <input class="uspi-item-value" type="number" name="offsetSec" min="-5" max="5" step="0.1" value="0">
+      </div>
+      <div class="c4-hint">Só é usada quando o CS2 não manda o tempo exato. Valor positivo adianta o cronômetro.</div>
+
+      <div class="uspi-item">
+        <div class="uspi-item-label">Precisão</div>
+        <select class="uspi-item-value select" name="precision">
+          <option value="int">Segundos inteiros (mais liso)</option>
+          <option value="half">Meio segundo abaixo de 10s</option>
+          <option value="tenth">0,2s abaixo de 10s (mais pesado)</option>
+        </select>
+      </div>
+      <div class="c4-hint">A contagem vai inteira para o deck de uma vez, como animação. Mais precisão só deixa o arquivo maior.</div>
+
+      <div class="uspi-item">
+        <div class="uspi-item-label">Tela do lado</div>
+        <select class="uspi-item-value select" name="forceSide">
+          <option value="">Automático (pelo jogo)</option>
+          <option value="T">Sempre TR (teste)</option>
+          <option value="CT">Sempre CT (teste)</option>
+        </select>
+      </div>
+      <div class="c4-hint">Antes do plant a tecla mostra a tela do seu lado. Use "Sempre TR/CT" para ver a arte sem abrir o jogo.</div>
+
+    </form>
+  </div>
+
+  <script src="../../libs/js/constants.js"></script>
+  <script src="../../libs/js/eventEmitter.js"></script>
+  <script src="../../libs/js/timers.js"></script>
+  <script src="../../libs/js/utils.js"></script>
+  <script src="../../libs/js/ulanziApi.js"></script>
+  <script src="./inspector.js"></script>
+</body>
+</html>

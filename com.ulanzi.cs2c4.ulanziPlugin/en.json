@@ -1,0 +1,11 @@
+{
+  "Name": "CS2 C4 Timer",
+  "Description": "Shows the Counter-Strike 2 C4 timer on a key, colored for defuse with and without a kit.",
+  "Actions": [
+    {
+      "Name": "C4 Timer",
+      "Tooltip": "C4 countdown linked to CS2"
+    }
+  ],
+  "Localization": {}
+}

@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C4 Timer para Ulanzi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Plugin gratuito que mostra o tempo da C4 do Counter-Strike 2 nas teclas do Ulanzi D200, em pixel art 8-bit.">
+<link rel="icon" href="img/icone.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: página única num céu noturno de pixel art, como a tela do plugin. Herói com o deck,
+   depois estados, animações, instalação, como funciona, ban e ética, dúvidas, créditos.
+   Visual deliberadamente escuro (um tema só), paleta de 16 cores do próprio plugin. */
+:root {
+  --ink: #1a1c2c;
+  --night: #141626;
+  --panel: #222540;
+  --edge: #333c57;
+  --slate: #566c86;
+  --steel: #94b0c2;
+  --fg: #f4f4f4;
+  --yellow: #ffcd75;
+  --orange: #ef7d57;
+  --red: #b13e53;
+  --green: #38b764;
+  --lime: #a7f070;
+  --blue: #3b5dc9;
+  --sky: #41a6f6;
+  --cyan: #73eff7;
+  --display: "Press Start 2P", "Courier New", monospace;
+  --body: "Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+  --mono: "VT323", "Consolas", monospace;
+  --px: 4px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--night);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+/* céu: estrelas em pixel, fixas */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(var(--steel) 1px, transparent 1.5px),
+    radial-gradient(var(--slate) 1px, transparent 1.5px),
+    radial-gradient(var(--edge) 1.5px, transparent 2px);
+  background-size: 173px 151px, 97px 113px, 61px 71px;
+  background-position: 13px 29px, 51px 7px, 0 0;
+  opacity: .55;
+}
+img { max-width: 100%; }
+.pix { image-rendering: pixelated; image-rendering: crisp-edges; }
+a { color: var(--cyan); }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+section { padding-block: 64px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 1.35rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin: 0 0 8px;
+}
+h1, h2, h3 { text-wrap: balance; }
+h2 {
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 2.6vw, 1.45rem);
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+h3 { font-size: 1.15rem; margin: 0 0 6px; }
+p { margin: 0 0 14px; max-width: 65ch; }
+.lead { font-size: 1.15rem; color: var(--steel); }
+
+/* botões com cara de botão de cartucho */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-size: .78rem;
+  line-height: 1.4;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--yellow);
+  padding: 16px 20px;
+  border: 0;
+  box-shadow: 0 var(--px) 0 var(--orange), 0 calc(var(--px) * 2) 0 var(--ink);
+  transform: translateY(0);
+  transition: transform .08s, box-shadow .08s;
+}
+.btn:hover { transform: translateY(2px); box-shadow: 0 2px 0 var(--orange), 0 calc(var(--px) + 2px) 0 var(--ink); }
+.btn.alt { background: var(--panel); color: var(--fg); box-shadow: 0 var(--px) 0 var(--edge), 0 calc(var(--px) * 2) 0 var(--ink); }
+.btns { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
+.small-note { font-family: var(--mono); font-size: 1.2rem; color: var(--slate); margin-top: 18px; }
+
+/* ---------------- herói ---------------- */
+.hero { padding-block: 56px 40px; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: center; }
+.hero h1 {
+  font-family: var(--display);
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  line-height: 1.15;
+  margin: 0 0 18px;
+  color: var(--yellow);
+  text-shadow: var(--px) var(--px) 0 var(--red), calc(var(--px) * 2) calc(var(--px) * 2) 0 var(--ink);
+}
+.hero h1 span { display: block; color: var(--fg); font-size: .42em; text-shadow: 3px 3px 0 var(--ink); margin-top: 10px; }
+.hero-text { min-width: 0; }
+
+/* o deck desenhado em CSS, com o GIF real ocupando duas teclas */
+.deck {
+  background: linear-gradient(#2a2d36, #1d1f26);
+  border-radius: 22px;
+  padding: 18px 18px 22px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
+  max-width: 100%;
+}
+.deck-brand { text-align: center; font-family: var(--body); color: #8b8f99; letter-spacing: .2em; font-size: .8rem; margin-bottom: 12px; }
+.keys { display: grid; grid-template-columns: repeat(5, 1fr); gap: 9px; }
+.key {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: #121318;
+  box-shadow: inset 0 0 0 1px #2c2f38;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+}
+.key.wide { grid-column: span 2; aspect-ratio: auto; }
+.key.wide img { width: 100%; height: 100%; display: block; }
+.key img { width: 100%; height: 100%; object-fit: cover; }
+.key i { width: 38%; height: 38%; border-radius: 3px; background: #2e3240; display: block; }
+.key.k-blue i { background: var(--blue); }
+.key.k-sky i { background: #4b67d6; border-radius: 50%; }
+.key.window { grid-column: span 2; aspect-ratio: auto; }
+.deck-caption { font-family: var(--mono); font-size: 1.15rem; color: var(--slate); text-align: center; margin-top: 12px; }
+
+/* ---------------- estados ---------------- */
+.states { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 28px; }
+.state {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) 1fr;
+  gap: 18px;
+  align-items: center;
+  background: var(--panel);
+  padding: 16px;
+  border: 2px solid var(--edge);
+}
+.state img { display: block; width: 100%; border-radius: 4px; }
+.state div { min-width: 0; }
+.state h3 { font-family: var(--mono); font-size: 1.6rem; font-weight: 400; letter-spacing: .04em; margin: 0; line-height: 1.1; }
+.state p { margin: 4px 0 0; color: var(--steel); font-size: 1rem; }
+.c-green { color: var(--lime); } .c-yellow { color: var(--yellow); } .c-red { color: #ff8a9b; } .c-blue { color: var(--sky); }
+
+/* ---------------- animações ---------------- */
+.anims { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 28px; }
+.anim { margin: 0; min-width: 0; }
+.anim img { display: block; width: 100%; border-radius: 8px; border: 2px solid var(--edge); }
+.anim figcaption { font-family: var(--mono); font-size: 1.2rem; color: var(--steel); margin-top: 8px; line-height: 1.2; }
+.anim.wide { grid-column: span 2; }
+.anim-row2 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 20px; }
+.callout {
+  background: var(--panel);
+  border: 2px solid var(--edge);
+  padding: 20px;
+  min-width: 0;
+}
+.callout p:last-child { margin-bottom: 0; }
+
+/* ---------------- instalação ---------------- */
+.steps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 28px; counter-reset: step; }
+.step { display: grid; grid-template-columns: 64px 1fr; gap: 18px; }
+.step::before {
+  counter-increment: step;
+  content: counter(step);
+  font-family: var(--display);
+  font-size: 1.25rem;
+  color: var(--ink);
+  background: var(--yellow);
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 var(--px) 0 var(--orange);
+}
+.step-body { min-width: 0; }
+.step-body p { margin-bottom: 10px; }
+code, .path {
+  font-family: var(--mono);
+  font-size: 1.25rem;
+  background: var(--ink);
+  color: var(--cyan);
+  padding: 1px 8px;
+  border: 1px solid var(--edge);
+  overflow-wrap: anywhere;
+}
+.shot {
+  margin: 12px 0 0;
+  border: 2px dashed var(--slate);
+  background: repeating-linear-gradient(45deg, var(--panel) 0 12px, #1e2138 12px 24px);
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 20px;
+  font-family: var(--mono);
+  font-size: 1.25rem;
+  color: var(--steel);
+  max-width: 640px;
+}
+.shot img { display: block; width: 100%; }
+.shot.has-img { border: 2px solid var(--edge); padding: 0; background: none; min-height: 0; }
+
+/* ---------------- como funciona ---------------- */
+.flow-box { overflow-x: auto; margin-top: 24px; background: var(--panel); border: 2px solid var(--edge); padding: 20px; }
+.flow-box svg { display: block; min-width: 760px; width: 100%; height: auto; }
+
+/* ---------------- ban e ética ---------------- */
+.verdicts { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 28px; }
+.verdict { background: var(--panel); border: 2px solid var(--edge); padding: 24px; min-width: 0; }
+.verdict h3 { font-family: var(--display); font-size: .95rem; line-height: 1.6; margin-bottom: 14px; }
+.verdict ul { padding-left: 20px; margin: 0 0 14px; }
+.verdict li { margin-bottom: 8px; }
+.verdict .warn { border-left: 4px solid var(--orange); padding: 10px 14px; background: var(--ink); color: var(--yellow); }
+.verdict .warn p { margin: 0; }
+.tag { display: inline-block; font-family: var(--mono); font-size: 1.15rem; padding: 0 8px; margin-bottom: 12px; color: var(--ink); }
+.tag.ok { background: var(--lime); } .tag.info { background: var(--cyan); }
+
+/* ---------------- dúvidas ---------------- */
+.faq { margin-top: 24px; display: grid; gap: 10px; max-width: 820px; }
+.faq details { background: var(--panel); border: 2px solid var(--edge); }
+.faq summary { cursor: pointer; padding: 14px 18px; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--display); color: var(--yellow); }
+.faq details[open] summary::after { content: "-"; }
+.faq details p { padding: 0 18px 14px; margin: 0; color: var(--steel); }
+
+/* ---------------- créditos ---------------- */
+footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top: 24px; }
+.credit { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; }
+.credit img { width: 96px; height: 96px; border: 2px solid var(--edge); }
+.credit h2 { margin-bottom: 8px; }
+.fine { font-size: .92rem; color: var(--slate); margin-top: 28px; max-width: 80ch; }
+
+/* estrela cadente de vez em quando, como no plugin */
+.meteor {
+  position: fixed;
+  top: 12%;
+  left: 105%;
+  width: 90px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--fg), var(--cyan) 30%, transparent);
+  transform: rotate(-12deg);
+  pointer-events: none;
+  z-index: -1;
+  animation: meteor 24s linear 6s infinite;
+}
+@keyframes meteor {
+  0% { left: 105%; top: 8%; opacity: 0; }
+  1% { opacity: 1; }
+  5% { left: -20%; top: 24%; opacity: 1; }
+  6%, 100% { left: -20%; top: 24%; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .meteor { display: none; } }
+
+/* ---------------- telas menores ---------------- */
+@media (max-width: 860px) {
+  .hero-grid, .verdicts, .anim-row2 { grid-template-columns: 1fr; }
+  .states { grid-template-columns: 1fr; }
+  .anims { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  section { padding-block: 44px; }
+  .state { grid-template-columns: 1fr; }
+  .step { grid-template-columns: 1fr; gap: 10px; }
+  .step::before { width: 44px; height: 44px; font-size: 1rem; }
+  .credit { grid-template-columns: 1fr; }
+  .keys { gap: 6px; }
+  .btn { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="meteor" aria-hidden="true"></div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <p class="eyebrow">Plugin grátis para Ulanzi D200</p>
+      <h1>C4 TIMER<span>Counter-Strike 2</span></h1>
+      <p class="lead">O tempo da C4 nas teclas do seu deck, em pixel art 8-bit. Verde dá sem kit, amarelo só com kit, vermelho não dá mais. Leitura de relance, sem tirar o olho do jogo.</p>
+      <div class="btns">
+        <a class="btn" href="https://github.com/murar0/cs2-c4-timer/releases/latest/download/com.ulanzi.cs2c4.ulanziPlugin.zip">Baixar v1.3.0</a>
+        <a class="btn alt" href="#instalar">Como instalar</a>
+      </div>
+      <p class="small-note">Windows · Ulanzi Studio 2.1+ · funciona offline</p>
+    </div>
+    <div>
+      <div class="deck" role="img" aria-label="Ulanzi D200 com o timer da C4 ocupando duas teclas: tela do CT, contagem até zero e explosão">
+        <div class="deck-brand">ULANZI</div>
+        <div class="keys">
+          <div class="key"><i></i></div>
+          <div class="key"><i></i></div>
+          <div class="key"><i></i></div>
+          <div class="key wide"><img class="pix" src="img/hero.gif" alt="" width="392" height="196"></div>
+          <div class="key"><i></i></div>
+          <div class="key"><i></i></div>
+          <div class="key k-blue"><i></i></div>
+          <div class="key k-blue"><i></i></div>
+          <div class="key k-sky"><i></i></div>
+          <div class="key"><i></i></div>
+          <div class="key"><i></i></div>
+          <div class="key"><i></i></div>
+          <div class="key window"><img class="pix" src="img/janela.png" alt="" width="456" height="196"></div>
+        </div>
+      </div>
+      <p class="deck-caption">Tecla larga: duas teclas viram uma tela só</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="cores">
+    <div class="wrap">
+      <p class="eyebrow">O que aparece</p>
+      <h2>Quatro cores, uma decisão</h2>
+      <p>A cor diz se ainda dá tempo de defusar. As marcas na barra são os limites de 10 segundos (sem kit) e 5 segundos (com kit). Uma margem de 0,3s antecipa a troca de cor para cobrir o seu tempo de reação.</p>
+      <div class="states">
+        <div class="state"><img class="pix" src="img/estado-verde.png" alt="Tecla verde com 27 segundos e o aviso DÁ SEM KIT" width="392" height="196"><div><h3 class="c-green">VERDE</h3><p>10s ou mais. Dá para defusar sem kit.</p></div></div>
+        <div class="state"><img class="pix" src="img/estado-amarelo.png" alt="Tecla amarela com 8 segundos e o aviso SÓ COM KIT" width="392" height="196"><div><h3 class="c-yellow">AMARELO</h3><p>Entre 10s e 5s. Só dá com kit. Se você é CT e tem kit, aparece USE SEU KIT.</p></div></div>
+        <div class="state"><img class="pix" src="img/estado-vermelho.png" alt="Tecla vermelha com 3 segundos e o aviso SEM TEMPO" width="392" height="196"><div><h3 class="c-red">VERMELHO</h3><p>Menos de 5s. Não dá mais, nem com kit. Hora de sair.</p></div></div>
+        <div class="state"><img class="pix" src="img/estado-azul.png" alt="Tecla azul com 6 segundos e o aviso VAI DAR" width="392" height="196"><div><h3 class="c-blue">AZUL</h3><p>Alguém está defusando. Mostra VAI DAR! ou NÃO DÁ!</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="animacoes">
+    <div class="wrap">
+      <p class="eyebrow">Arte 8-bit original</p>
+      <h2>Cada momento tem a sua animação</h2>
+      <div class="anims">
+        <figure class="anim"><img class="pix" src="img/t.gif" alt="Boneco TR de balaclava segurando a C4 no deserto" width="196" height="196" loading="lazy"><figcaption>Você é TR</figcaption></figure>
+        <figure class="anim"><img class="pix" src="img/ct.gif" alt="Boneco CT de capacete numa noite estrelada" width="196" height="196" loading="lazy"><figcaption>Você é CT</figcaption></figure>
+        <figure class="anim"><img class="pix" src="img/boom.gif" alt="Explosão da C4 com clarão e BOOM" width="196" height="196" loading="lazy"><figcaption>Explodiu</figcaption></figure>
+        <figure class="anim"><img class="pix" src="img/defuse.gif" alt="Fio cortado, check verde e DEFUSADA" width="196" height="196" loading="lazy"><figcaption>Defusada</figcaption></figure>
+      </div>
+      <div class="anim-row2">
+        <figure class="anim" style="margin:0"><img class="pix" src="img/estrela.gif" alt="Estrela cadente cruzando o céu da tela do TR" width="392" height="196" loading="lazy"><figcaption>A cada 4 a 6 minutos, uma estrela cadente cruza o céu</figcaption></figure>
+        <div class="callout">
+          <h3>Por que não pisca</h3>
+          <p>Cada imagem que chega ao D200 faz a tecla piscar enquanto ele redesenha. Por isso o plugin manda a contagem inteira de uma vez, como animação, no momento do plant. O próprio deck anima sozinho.</p>
+          <p>Ele detecta se você é TR ou CT pelo jogo, e continua mostrando o seu lado mesmo quando você morre e assiste um amigo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="instalar">
+    <div class="wrap">
+      <p class="eyebrow">Passo a passo</p>
+      <h2>Instalação em 6 passos</h2>
+      <ol class="steps">
+        <li class="step"><div class="step-body">
+          <h3>Baixe e extraia</h3>
+          <p>Baixe o <a href="https://github.com/murar0/cs2-c4-timer/releases/latest/download/com.ulanzi.cs2c4.ulanziPlugin.zip">ZIP do plugin</a>, clique com o botão direito e escolha "Extrair tudo".</p>
+        </div></li>
+        <li class="step"><div class="step-body">
+          <h3>Feche o Ulanzi Studio</h3>
+          <p>Feche a janela e também o ícone perto do relógio do Windows (botão direito, Sair).</p>
+        </div></li>
+        <li class="step"><div class="step-body">
+          <h3>Copie para a pasta de plugins</h3>
+          <p>Aperte <code>Win + R</code>, cole <span class="path">%APPDATA%\Ulanzi\UlanziDeck\Plugins</span> e dê Enter. Copie a pasta <code>com.ulanzi.cs2c4.ulanziPlugin</code> para dentro. Abrindo a pasta copiada, o <code>manifest.json</code> precisa aparecer logo de cara.</p>
+          <div class="shot" data-shot="1">PRINT 1 · pasta de plugins com a pasta do C4 Timer dentro</div>
+        </div></li>
+        <li class="step"><div class="step-body">
+          <h3>Coloque nas teclas</h3>
+          <p>Abra o Ulanzi Studio. Na categoria <b>CS2 C4 Timer</b>, arraste <b>Timer da C4</b> para uma tecla, ou para duas teclas vizinhas na mesma linha para ter a tecla larga. Ele junta as duas sozinho.</p>
+          <div class="shot" data-shot="2">PRINT 2 · Ulanzi Studio com a ação nas duas teclas</div>
+        </div></li>
+        <li class="step"><div class="step-body">
+          <h3>Ligue ao CS2</h3>
+          <p>Clique na tecla e aperte <b>Instalar no CS2</b>. O plugin encontra a pasta do jogo na Steam e grava um arquivo de configuração. Se não achar, use <b>Ver arquivo .cfg</b> e salve o texto em <span class="path">...\Counter-Strike Global Offensive\game\csgo\cfg</span>.</p>
+          <div class="shot" data-shot="3">PRINT 3 · painel da tecla depois de Instalar no CS2</div>
+        </div></li>
+        <li class="step"><div class="step-body">
+          <h3>Reinicie o CS2 e teste</h3>
+          <p>Com o jogo aberto, o painel mostra <b>CS2: conectado</b>. Para testar sem jogar, aperte a própria tecla: roda uma simulação de 40 segundos. Assista até o fim.</p>
+          <div class="shot" data-shot="4">PRINT 4 · painel mostrando CS2: conectado</div>
+        </div></li>
+      </ol>
+      <div class="callout" style="margin-top:28px">
+        <h3>Bônus: a janela comprida</h3>
+        <p>A janela do canto inferior direito não aceita plugins, só relógio, uso do PC ou imagem de fundo. Para combinar, selecione a janela, vá em <b>Imagem de fundo</b> e escolha <code>assets\janela-456x196.png</code>, que vem dentro da pasta do plugin.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="como-funciona">
+    <div class="wrap">
+      <p class="eyebrow">Por dentro</p>
+      <h2>Como funciona</h2>
+      <p>O CS2 tem um recurso oficial chamado <b>Game State Integration</b>, feito pela Valve para luzes de palco, periféricos e overlays de transmissão. Com um arquivo de configuração na pasta do jogo, o próprio CS2 envia o estado da partida para um endereço no seu computador. O plugin recebe esses dados e desenha as teclas. Nada sai do seu PC.</p>
+      <div class="flow-box">
+        <svg viewBox="0 0 980 210" role="img" aria-label="Fluxo: o CS2 lê o arquivo de configuração e envia os dados para o plugin no seu PC, que manda a animação pelo Ulanzi Studio para o D200">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#ffcd75"/></marker>
+          </defs>
+          <g font-family="Atkinson Hyperlegible, Segoe UI, Arial, sans-serif" font-size="17" fill="#94b0c2" text-anchor="middle">
+            <rect x="10" y="50" width="200" height="104" fill="#1a1c2c" stroke="#566c86" stroke-width="3"/>
+            <text x="110" y="92" fill="#ffcd75" font-size="24" font-weight="700">CS2</text>
+            <text x="110" y="122">envia o estado</text>
+            <rect x="265" y="50" width="200" height="104" fill="#1a1c2c" stroke="#566c86" stroke-width="3"/>
+            <text x="365" y="92" fill="#73eff7" font-size="24" font-weight="700">Plugin</text>
+            <text x="365" y="122">no seu PC</text>
+            <rect x="520" y="50" width="200" height="104" fill="#1a1c2c" stroke="#566c86" stroke-width="3"/>
+            <text x="620" y="92" fill="#73eff7" font-size="24" font-weight="700">Ulanzi Studio</text>
+            <text x="620" y="122">repassa a animação</text>
+            <rect x="775" y="50" width="195" height="104" fill="#1a1c2c" stroke="#566c86" stroke-width="3"/>
+            <text x="872" y="92" fill="#a7f070" font-size="24" font-weight="700">D200</text>
+            <text x="872" y="122">anima sozinho</text>
+            <line x1="212" y1="102" x2="259" y2="102" stroke="#ffcd75" stroke-width="3" marker-end="url(#arrow)"/>
+            <line x1="467" y1="102" x2="514" y2="102" stroke="#ffcd75" stroke-width="3" marker-end="url(#arrow)"/>
+            <line x1="722" y1="102" x2="769" y2="102" stroke="#ffcd75" stroke-width="3" marker-end="url(#arrow)"/>
+            <text x="237" y="36" fill="#ffcd75">HTTP local</text>
+            <text x="492" y="36" fill="#ffcd75">GIF</text>
+            <text x="747" y="36" fill="#ffcd75">USB</text>
+            <text x="110" y="186" fill="#566c86" font-size="16">lê o .cfg na pasta do jogo</text>
+            <text x="365" y="186" fill="#566c86" font-size="16">endereço 127.0.0.1</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="ban">
+    <div class="wrap">
+      <p class="eyebrow">A pergunta que todo mundo faz</p>
+      <h2>Dá ban? É hack?</h2>
+      <div class="verdicts">
+        <div class="verdict">
+          <span class="tag ok">VAC</span>
+          <h3>Por que achamos que não dá ban</h3>
+          <ul>
+            <li>Usa a <a href="https://developer.valvesoftware.com/wiki/Counter-Strike:_Global_Offensive_Game_State_Integration" target="_blank" rel="noopener">Game State Integration</a>, um recurso que a própria Valve documenta e que o jogo traz de fábrica.</li>
+            <li>Quem envia os dados é o CS2. O plugin não lê a memória do jogo, não injeta nada e não altera arquivos do jogo.</li>
+            <li>É o mesmo recurso usado por overlays de campeonato, luzes RGB e periféricos.</li>
+          </ul>
+          <div class="warn"><p>Não existe garantia oficial. Gamers Club, FACEIT e torneios têm regras próprias e podem proibir qualquer programa externo ou cronômetro da C4. Confira antes de usar lá. Para desligar, apague o arquivo <code>gamestate_integration_ulanzi_c4.cfg</code> da pasta cfg do CS2.</p></div>
+        </div>
+        <div class="verdict">
+          <span class="tag info">ÉTICA</span>
+          <h3>Por que não é hack</h3>
+          <ul>
+            <li>Segundo a documentação da Valve, enquanto você joga o CS2 só avisa que a bomba foi plantada. O tempo exato fica reservado para espectadores.</li>
+            <li>Esse aviso é o mesmo que todo mundo recebe: o jogo escreve na tela "40 segundos até a detonação" e toca um bipe nos últimos 10.</li>
+            <li>Ou seja, na partida o plugin é um cronômetro de 40 segundos disparado pelo aviso do próprio jogo. Daria para fazer o mesmo com um relógio na mão.</li>
+            <li>Ele não mostra nada escondido: nada de posição de inimigo, dinheiro dos outros ou quem está defusando onde. A Valve nem envia isso para quem está jogando.</li>
+            <li>Fake plant não engana: a contagem só começa quando o jogo confirma o plant.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="duvidas">
+    <div class="wrap">
+      <p class="eyebrow">Dúvidas</p>
+      <h2>Perguntas frequentes</h2>
+      <div class="faq">
+        <details><summary>Funciona quando o time inimigo planta?</summary><p>Sim. O aviso de plant chega para todo mundo, dos dois lados.</p></details>
+        <details><summary>Funciona no Stream Deck da Elgato?</summary><p>Ainda não. O plugin é feito para o Ulanzi Studio (D200 e família). Uma versão para Elgato depende de procura.</p></details>
+        <details><summary>E no Valorant?</summary><p>Não. O Valorant não tem um recurso oficial como a Game State Integration do CS2.</p></details>
+        <details><summary>Precisa de internet ou conta?</summary><p>Não. Tudo acontece no seu computador, e o plugin não coleta nem envia nenhum dado.</p></details>
+        <details><summary>O tempo é exato?</summary><p>Enquanto você joga, o plugin conta 40 segundos a partir do aviso de plant que o jogo envia. Morto, assistindo ou no GOTV, ele usa o tempo exato que o jogo manda. Se notar atraso, o painel tem um campo de correção.</p></details>
+        <details><summary>Como atualizo para uma versão nova?</summary><p>Feche o Ulanzi Studio, troque a pasta do plugin e abra de novo. A ligação com o CS2 é reaproveitada, então não precisa reinstalar.</p></details>
+        <details><summary>Achei um problema, onde aviso?</summary><p>Abra uma <a href="https://github.com/murar0/cs2-c4-timer/issues" target="_blank" rel="noopener">issue aqui no GitHub</a> ou comente nos vídeos do TikTok.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="credit">
+      <img class="pix" src="img/icone.png" alt="" width="98" height="98">
+      <div>
+        <p class="eyebrow">Créditos</p>
+        <h2>Criado por Felipe Muraro</h2>
+        <p>Ideia, testes e o vídeo que começou tudo: <a href="https://www.tiktok.com/@mur4r0" target="_blank" rel="noopener">@mur4r0 no TikTok</a>. Siga para ver as próximas versões.</p>
+      </div>
+    </div>
+    <p class="fine">Projeto independente, sem ligação com a Valve ou a Ulanzi. Counter-Strike é marca da Valve Corporation. Ulanzi e Ulanzi Studio são marcas da Ulanzi. Usa o SDK de plugins da Ulanzi (Apache 2.0). Toda a arte 8-bit é original do projeto.</p>
+  </div>
+</footer>
+</body>
+</html>

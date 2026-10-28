@@ -1,0 +1,11 @@
+{
+  "Name": "CS2 C4 Timer",
+  "Description": "Mostra o tempo da C4 do Counter-Strike 2 na tecla, com cores para defuse com e sem kit.",
+  "Actions": [
+    {
+      "Name": "Timer da C4",
+      "Tooltip": "Cronômetro da C4 integrado ao CS2"
+    }
+  ],
+  "Localization": {}
+}
