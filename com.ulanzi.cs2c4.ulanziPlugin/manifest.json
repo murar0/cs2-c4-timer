@@ -3,7 +3,7 @@
   "Name": "CS2 C4 Timer",
   "Description": "Mostra o tempo da C4 do Counter-Strike 2 na tecla, com cores para defuse com e sem kit.",
   "Icon": "assets/icons/plugin.svg",
-  "Version": "1.3.0",
+  "Version": "1.3.1",
   "Category": "CS2 C4 Timer",
   "CategoryIcon": "assets/icons/category.svg",
   "CodePath": "plugin/app.js",

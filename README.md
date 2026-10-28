@@ -18,7 +18,6 @@
 | Verde | 10s ou mais | DÁ SEM KIT |
 | Amarelo | Entre 10s e 5s | SÓ COM KIT |
 | Vermelho | Menos de 5s | SEM TEMPO |
-| Azul | Alguém defusando | VAI DAR! ou NÃO DÁ! |
 
 * Tecla única ou tecla larga (duas teclas vizinhas viram uma tela só).
 * Animações 8-bit do seu lado (TR ou CT), explosão, defuse e uma estrela cadente de vez em quando.

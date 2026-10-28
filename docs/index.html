@@ -166,10 +166,11 @@ p { margin: 0 0 14px; max-width: 65ch; }
 .keys-row.big .keycap { width: 150px; }
 
 /* ---------------- estados ---------------- */
-.states { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 28px; }
+.states { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 28px; }
 .state {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 1fr;
+  justify-items: start;
   gap: 18px;
   align-items: center;
   background: var(--panel);
@@ -179,7 +180,7 @@ p { margin: 0 0 14px; max-width: 65ch; }
 .state div { min-width: 0; }
 .state h3 { font-family: var(--mono); font-size: 1.6rem; font-weight: 400; letter-spacing: .04em; margin: 0; line-height: 1.1; }
 .state p { margin: 4px 0 0; color: var(--steel); font-size: 1rem; }
-.c-green { color: var(--lime); } .c-yellow { color: var(--yellow); } .c-red { color: #ff8a9b; } .c-blue { color: var(--sky); }
+.c-green { color: var(--lime); } .c-yellow { color: var(--yellow); } .c-red { color: #ff8a9b; }
 
 /* ---------------- animações ---------------- */
 .anims { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin-top: 28px; }
@@ -321,7 +322,7 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
       <h1>C4 TIMER<span>Counter-Strike 2</span></h1>
       <p class="lead">O tempo da C4 nas teclas do seu deck, em pixel art 8-bit. Verde dá sem kit, amarelo só com kit, vermelho não dá mais. Leitura de relance, sem tirar o olho do jogo.</p>
       <div class="btns">
-        <a class="btn" href="download/com.ulanzi.cs2c4.ulanziPlugin.zip">Baixar v1.3.0</a>
+        <a class="btn" href="download/com.ulanzi.cs2c4.ulanziPlugin.zip">Baixar v1.3.1</a>
         <a class="btn alt" href="#instalar">Como instalar</a>
       </div>
       <p class="small-note">Windows · Ulanzi Studio 2.1+ · funciona offline</p>
@@ -355,13 +356,12 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
   <section id="cores">
     <div class="wrap">
       <p class="eyebrow">O que aparece</p>
-      <h2>Quatro cores, uma decisão</h2>
+      <h2>Três cores, uma decisão</h2>
       <p>A cor diz se ainda dá tempo de defusar. As marcas na barra são os limites de 10 segundos (sem kit) e 5 segundos (com kit). Uma margem de 0,3s antecipa a troca de cor para cobrir o seu tempo de reação.</p>
       <div class="states">
         <div class="state"><div class="keys-row" role="img" aria-label="Tecla verde com 27 segundos e o aviso DÁ SEM KIT"><div class="keycap"><img class="pix l" src="img/estado-verde.png" alt=""></div><div class="keycap"><img class="pix r" src="img/estado-verde.png" alt=""></div></div><div><h3 class="c-green">VERDE</h3><p>10s ou mais. Dá para defusar sem kit.</p></div></div>
         <div class="state"><div class="keys-row" role="img" aria-label="Tecla amarela com 8 segundos e o aviso SÓ COM KIT"><div class="keycap"><img class="pix l" src="img/estado-amarelo.png" alt=""></div><div class="keycap"><img class="pix r" src="img/estado-amarelo.png" alt=""></div></div><div><h3 class="c-yellow">AMARELO</h3><p>Entre 10s e 5s. Só dá com kit. Se você é CT e tem kit, aparece USE SEU KIT.</p></div></div>
         <div class="state"><div class="keys-row" role="img" aria-label="Tecla vermelha com 3 segundos e o aviso SEM TEMPO"><div class="keycap"><img class="pix l" src="img/estado-vermelho.png" alt=""></div><div class="keycap"><img class="pix r" src="img/estado-vermelho.png" alt=""></div></div><div><h3 class="c-red">VERMELHO</h3><p>Menos de 5s. Não dá mais, nem com kit. Hora de sair.</p></div></div>
-        <div class="state"><div class="keys-row" role="img" aria-label="Tecla azul com 6 segundos e o aviso VAI DAR"><div class="keycap"><img class="pix l" src="img/estado-azul.png" alt=""></div><div class="keycap"><img class="pix r" src="img/estado-azul.png" alt=""></div></div><div><h3 class="c-blue">AZUL</h3><p>Alguém está defusando. Mostra VAI DAR! ou NÃO DÁ!</p></div></div>
       </div>
     </div>
   </section>
@@ -494,6 +494,7 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
             <li>O timer não faz nada disso. Não revela posição de ninguém, não mexe na mira e não muda nada dentro do jogo.</li>
             <li>O CS2 não tem um timer oficial da C4 na tela, mas a comunidade inteira sabe que ela dura 40 segundos e que, quando a música acelera, é o divisor entre defusar sem kit e só com kit.</li>
             <li>O plugin transforma esse conhecimento numa cor. É um gadget visual e funcional que ajuda a decidir mais rápido: defusa ou corre.</li>
+            <li>De propósito, o plugin não mostra se alguém está defusando. Para o TR isso revelaria o que o jogo esconde e acabaria com o jogo mental de se expor ou não para cortar o defuse.</li>
             <li>Segundo a documentação da Valve, enquanto você joga o CS2 só avisa que a bomba foi plantada, o mesmo momento que todo mundo percebe na partida. Fake plant não engana.</li>
           </ul>
         </div>

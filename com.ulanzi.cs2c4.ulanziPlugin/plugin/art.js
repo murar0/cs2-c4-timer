@@ -399,18 +399,12 @@ const ZONE_STYLE = {
   green: { bg: PAL.green, edge: PAL.teal, fg: PAL.white, outline: PAL.ink, label: PAL.white, labelSh: PAL.teal, track: PAL.teal, fill: PAL.white },
   amber: { bg: PAL.yellow, edge: PAL.orange, fg: PAL.ink, outline: null, shadow: PAL.orange, label: PAL.ink, labelSh: PAL.orange, track: PAL.orange, fill: PAL.ink },
   red: { bg: PAL.red, edge: PAL.plum, fg: PAL.white, outline: PAL.ink, label: PAL.white, labelSh: PAL.plum, track: PAL.plum, fill: PAL.white },
-  blue: { bg: PAL.blue, edge: PAL.navy, fg: PAL.white, outline: PAL.ink, label: PAL.lime, labelSh: PAL.navy, track: PAL.navy, fill: PAL.white },
 };
 
 /**
  * Textos do aviso, em uma linha (1 tecla) e em duas (tecla larga).
  */
 export function labels(info) {
-  if (info.defusing) {
-    return info.defuseOk
-      ? { one: "VAI DAR!", two: ["VAI", "DAR!"], color: PAL.lime }
-      : { one: "NÃO DÁ!", two: ["NÃO", "DÁ!"], color: PAL.yellow };
-  }
   if (info.zone === "green") return { one: "DÁ SEM KIT", two: ["DÁ SEM", "KIT"] };
   if (info.zone === "amber") {
     return info.myKit ? { one: "USE SEU KIT", two: ["USE O", "KIT!"] } : { one: "SÓ COM KIT", two: ["SÓ COM", "KIT"] };
@@ -444,10 +438,10 @@ function bar(cv, x, y, remaining, st, w = 40) {
 }
 
 /**
- * info: { zone, defusing, defuseOk, myKit, timeStr, remaining }
+ * info: { zone, myKit, timeStr, remaining }
  */
 export function sceneCountdown(W, info) {
-  const st = ZONE_STYLE[info.defusing ? "blue" : info.zone];
+  const st = ZONE_STYLE[info.zone];
   const cv = new Canvas(W, KEY);
   frame(cv, st);
   const lab = labels(info);

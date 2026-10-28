@@ -6,7 +6,7 @@
  *   loop a cada 25ms --> GIF (contagem, lados, explosão) ou PNG --> tecla
  *
  * Quase tudo vai para o deck como GIF, que o próprio aparelho anima. Assim a
- * tecla recebe uma imagem só por evento (plant, defuse, fim) e não pisca.
+ * tecla recebe uma imagem só por evento (plant, fim da rodada) e não pisca.
  */
 import fs from "fs";
 import crypto from "crypto";
@@ -167,7 +167,7 @@ function writeGifs(name, { frames, delays }, wide, loop) {
 }
 
 // --- contagem da C4 como GIF ---
-// Gerada no plant e de novo só se algo mudar (defuse, kit, ou o jogo corrigir
+// Gerada no plant e de novo só se algo mudar (kit, ou o jogo corrigir
 // o tempo em mais de RESYNC_MS).
 const RESYNC_MS = 300;
 const DEVICE_LATENCY_MS = 80; // tempo estimado até o deck começar a tocar
@@ -180,11 +180,7 @@ function updateCountdownPlan(snap, now) {
     cd = null;
     return;
   }
-  const fixed = {
-    defusing: !!snap.defusing,
-    defuseOk: snap.defuseRemaining !== null && snap.defuseRemaining <= snap.remaining,
-    myKit: snap.hasKit && snap.team === "CT",
-  };
+  const fixed = { myKit: snap.hasKit && snap.team === "CT" };
   const sig = JSON.stringify(fixed);
   const explodeAt = now + snap.remaining * 1000;
   const drift = cd ? Math.abs(cd.explodeAt - explodeAt) : 0;

@@ -13,7 +13,6 @@ Tudo é pixel art 8-bit, com números grandes e contornados para dar para ler de
 | Verde | Faltam 10s ou mais | DÁ SEM KIT |
 | Amarelo | Entre 10s e 5s | SÓ COM KIT (ou USE SEU KIT, se você é CT e tem kit) |
 | Vermelho | Menos de 5s | SEM TEMPO |
-| Azul | Alguém está defusando | VAI DAR! ou NÃO DÁ! |
 
 A barra embaixo marca os limites de 10s (sem kit) e 5s (com kit). Na tecla larga ela atravessa as duas teclas.
 
@@ -23,7 +22,9 @@ A "Margem" (padrão 0.3s) antecipa as trocas de cor para compensar seu tempo de 
 
 ### Por que não pisca
 
-Cada imagem que chega ao D200 faz a tecla piscar enquanto ele redesenha. Por isso o plugin manda a contagem inteira de uma vez, como uma animação GIF, no momento do plant, e o próprio deck anima sozinho. Um GIF novo só é enviado quando algo muda de verdade: o jogo corrige o tempo, alguém começa ou para de defusar, ou a rodada acaba.
+Cada imagem que chega ao D200 faz a tecla piscar enquanto ele redesenha. Por isso o plugin manda a contagem inteira de uma vez, como uma animação GIF, no momento do plant, e o próprio deck anima sozinho. Um GIF novo só é enviado quando algo muda de verdade: o jogo corrige o tempo ou a rodada acaba.
+
+De propósito, o plugin não mostra se alguém está defusando. Para o TR isso seria informação que o jogo esconde (o jogo mental de se expor para cortar o defuse), então fica de fora.
 
 A "Precisão" escolhe se o número mostra segundos inteiros, meio segundo ou 0,2s abaixo de 10s. Como tudo vai na mesma animação, isso não aumenta as piscadas, só o tamanho do arquivo.
 

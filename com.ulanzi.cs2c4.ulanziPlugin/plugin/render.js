@@ -65,11 +65,7 @@ export function sceneFor(snap, settings) {
   const rq = quantize(snap.remaining, settings.precision);
   const cv = sceneCountdown(W, {
     zone,
-    defusing: snap.defusing,
-    defuseOk: snap.defuseRemaining !== null && snap.defuseRemaining <= snap.remaining,
     myKit: snap.hasKit && snap.team === "CT",
-    isCT: snap.team === "CT",
-    hasKit: snap.hasKit,
     timeStr: formatTime(rq, settings.precision),
     remaining: snap.remaining,
   });
@@ -87,7 +83,7 @@ export function renderFrame(snap, settings) {
  * algo visível muda (número, cor ou barra). O último quadro ("0") fica parado
  * até a explosão chegar.
  *   W: 49 (1 tecla) ou 98 (tecla larga)
- *   fixed: { defusing, defuseOk, myKit }
+ *   fixed: { myKit }
  */
 export function countdownFrames(W, r0, settings, fixed) {
   const segs = [];

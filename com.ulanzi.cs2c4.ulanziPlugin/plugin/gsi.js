@@ -44,8 +44,6 @@ export class C4Tracker {
     this.phase = "idle"; // idle | planted | ended
     this.explodeAt = null;
     this.source = null;
-    this.defusing = false;
-    this.defuseEndsAt = null;
     this.result = null; // defused | exploded
     this.endedAt = null;
     this.roundLocked = false; // impede rearmar com dado velho depois do fim
@@ -120,7 +118,6 @@ export class C4Tracker {
     this.phase = "ended";
     this.result = result;
     this.endedAt = this.now();
-    this.defusing = false;
     this.roundLocked = true;
     const s = this.stats;
     this.log(
@@ -191,17 +188,9 @@ export class C4Tracker {
       this._exactSample("bomb", num(bomb.countdown), t, offsetSec);
     }
 
-    // Alguém defusando
-    if (pc && pc.phase === "defuse" && num(pc.phase_ends_in) !== null) {
-      this.defusing = true;
-      this.defuseEndsAt = t + num(pc.phase_ends_in) * 1000;
-    } else if (bomb && bomb.state === "defusing" && num(bomb.countdown) !== null) {
-      this.defusing = true;
-      this.defuseEndsAt = t + num(bomb.countdown) * 1000;
-    } else if (this.phase === "planted") {
-      this.defusing = false;
-      this.defuseEndsAt = null;
-    }
+    // De propósito, o plugin NÃO acompanha se alguém está defusando: para o
+    // TR isso revelaria uma informação que o jogo esconde (o "jogo mental"
+    // de expor ou não para cortar o defuse).
 
     // Fonte básica: só sabemos que foi plantada agora
     if (roundBomb === "planted" && this.phase !== "planted") {
@@ -230,11 +219,6 @@ export class C4Tracker {
     return {
       phase: this.phase,
       remaining: this.explodeAt !== null ? Math.max(0, (this.explodeAt - t) / 1000) : null,
-      defusing: this.defusing,
-      defuseRemaining:
-        this.defusing && this.defuseEndsAt !== null
-          ? Math.max(0, (this.defuseEndsAt - t) / 1000)
-          : null,
       hasKit: this.hasKit,
       team: this.team,
       source: this.source,

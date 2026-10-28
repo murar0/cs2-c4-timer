@@ -1,7 +1,7 @@
 #!/bin/sh
 # Gera o index.html do GitHub Pages e a prévia a partir de page.html
 REPO="${REPO:-murar0/cs2-c4-timer}"
-VERSION="${VERSION:-1.3.0}"
+VERSION="${VERSION:-1.3.1}"
 cd "$(dirname "$0")"
 OUT=../docs
 sed -e "s#{{REPO}}#$REPO#g" -e "s#{{VERSION}}#$VERSION#g" page.html > "$OUT/preview.tmp"
