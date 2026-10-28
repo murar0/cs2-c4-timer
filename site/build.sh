@@ -13,3 +13,6 @@ sed -e "s#{{REPO}}#$REPO#g" -e "s#{{VERSION}}#$VERSION#g" page.html > "$OUT/prev
   printf '</body>\n</html>\n'
 } > "$OUT/index.html"
 rm -f "$OUT/preview.tmp"
+
+# Para lançar uma versão nova: gere o ZIP do plugin em docs/download
+#   git archive --format=zip -o docs/download/com.ulanzi.cs2c4.ulanziPlugin.zip HEAD com.ulanzi.cs2c4.ulanziPlugin

@@ -1,4 +1,5 @@
 com.ulanzi.cs2c4.ulanziPlugin/assets/cache/
 com.ulanzi.cs2c4.ulanziPlugin/logs/*.log*
 *.zip
+!docs/download/*.zip
 node_modules/
