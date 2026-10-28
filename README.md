@@ -38,6 +38,8 @@ O passo a passo com imagens, como funciona e a explicação de por que achamos q
 
 Gamers Club, FACEIT e campeonatos têm regras próprias e podem proibir programas externos ou cronômetros da C4. Confira antes de usar lá. Projeto independente, sem ligação com a Valve ou a Ulanzi.
 
+Este projeto é gratuito e foi publicado para incentivar a comunidade a ser criativa e a se ajudar. **O autor não se responsabiliza, de nenhuma maneira, por banimentos, punições ou qualquer outra consequência do uso.** A responsabilidade é inteiramente de quem decidir usar.
+
 ## Estrutura do repositório
 
 ```

@@ -82,7 +82,9 @@ Se mudar a porta ou o token, aperte "Instalar no CS2" de novo e reinicie o jogo.
 
 ## Regras e VAC
 
-A Game State Integration é um recurso oficial da Valve: o próprio jogo envia os dados, sem leitura de memória, sem injeção e sem mexer em arquivos do jogo. O plugin só mostra o que o jogo já informa a todos: o aviso de "40 segundos até a detonação" e o bipe dos últimos 10 segundos.
+A Game State Integration é um recurso oficial da Valve: o próprio jogo envia os dados, sem leitura de memória, sem injeção e sem mexer em arquivos do jogo.
+
+O plugin não dá vantagem que os outros não tenham, como ver através de paredes ou mira assistida. O CS2 não tem um timer oficial na tela, mas a comunidade inteira sabe que a C4 dura 40 segundos e que a música acelerando marca o limite entre defusar sem kit e só com kit. O timer transforma esse conhecimento numa cor, para decidir mais rápido se defusa ou corre.
 
 Ainda assim, plataformas e campeonatos (Gamers Club, FACEIT, torneios presenciais) têm regras próprias e podem proibir qualquer programa externo ou cronômetro da C4. Confira as regras antes de usar nesses lugares. Para tirar a integração, apague o `gamestate_integration_ulanzi_c4.cfg` da pasta cfg do CS2 e reinicie o jogo.
 
@@ -102,3 +104,7 @@ tools/gerar-animacoes.mjs  gera os GIFs de assets/anim e a imagem da janela
 ```
 
 Para depurar, abra o Ulanzi Studio com `--log --nodeRemoteDebug` e acesse `chrome://inspect` (porta 9231).
+
+## Responsabilidade
+
+Projeto gratuito, publicado para incentivar a comunidade a ser criativa e a se ajudar. O autor não se responsabiliza, de nenhuma maneira, por banimentos, punições ou qualquer outra consequência do uso. A responsabilidade é inteiramente de quem decidir usar.
