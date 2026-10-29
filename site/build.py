@@ -34,11 +34,6 @@ EN = [
      'Ulanzi D200 with the C4 timer on two keys: CT screen, countdown to zero and explosion'),
     ('Tecla larga: duas teclas viram uma tela só', 'Wide key: two keys become one screen'),
 
-    # contador
-    ('>Contador<', '>Counter<'),
-    ('>Downloads do plugin<', '>Plugin downloads<'),
-    ('Cada download do ZIP é contado pelo próprio GitHub.', 'Every ZIP download is counted by GitHub itself.'),
-    ('>Versão atual: v', '>Current version: v'),
 
     # cores
     ('>O que aparece<', '>What you see<'),
