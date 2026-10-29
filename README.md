@@ -8,7 +8,8 @@
   O tempo da C4 do Counter-Strike 2 nas teclas do seu deck, em pixel art 8-bit.<br>
   <a href="https://murar0.github.io/cs2-c4-timer/"><b>Página e manual</b></a> ·
   <a href="https://github.com/murar0/cs2-c4-timer/releases/latest/download/com.ulanzi.cs2c4.ulanziPlugin.zip"><b>Baixar</b></a> ·
-  <a href="https://www.tiktok.com/@mur4r0">TikTok</a>
+  <a href="https://www.tiktok.com/@mur4r0">TikTok</a><br>
+  <i>English: the C4 timer for CS2 on your Ulanzi D200 keys. <a href="https://murar0.github.io/cs2-c4-timer/en/">Page and install guide in English</a>.</i>
 </p>
 
 ---

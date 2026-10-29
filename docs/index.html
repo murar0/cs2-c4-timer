@@ -7,6 +7,9 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Plugin gratuito que mostra o tempo da C4 do Counter-Strike 2 nas teclas do Ulanzi D200, em pixel art 8-bit.">
 <link rel="icon" href="img/icone.png">
+<link rel="alternate" hreflang="pt-BR" href="https://murar0.github.io/cs2-c4-timer/">
+<link rel="alternate" hreflang="en" href="https://murar0.github.io/cs2-c4-timer/en/">
+<script>try{if(!localStorage.getItem("c4timer-lang")&&!/^pt/i.test(navigator.language||""))location.replace("en/"+location.hash)}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
@@ -114,6 +117,23 @@ p { margin: 0 0 14px; max-width: 65ch; }
 .btn.alt { background: var(--panel); color: var(--fg); box-shadow: 0 var(--px) 0 var(--edge), 0 calc(var(--px) * 2) 0 var(--ink); }
 .btns { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
 .small-note { font-family: var(--mono); font-size: 1.2rem; color: var(--slate); margin-top: 18px; }
+
+/* ---------------- barra do topo e idioma ---------------- */
+.topbar { border-bottom: 2px solid var(--edge); background: rgba(20, 22, 38, .85); }
+.topbar-in { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 10px; }
+.brand { font-family: var(--display); font-size: .8rem; color: var(--yellow); text-decoration: none; letter-spacing: .04em; }
+.lang { display: flex; gap: 6px; }
+.lang a {
+  font-family: var(--display);
+  font-size: .7rem;
+  padding: 8px 10px;
+  color: var(--steel);
+  text-decoration: none;
+  border: 2px solid var(--edge);
+  background: var(--panel);
+}
+.lang a:hover { color: var(--fg); border-color: var(--slate); }
+.lang a[aria-current="page"] { color: var(--ink); background: var(--yellow); border-color: var(--yellow); box-shadow: 0 3px 0 var(--orange); }
 
 /* ---------------- herói ---------------- */
 .hero { padding-block: 56px 40px; }
@@ -358,10 +378,19 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
 </style>
 </head>
 <body>
-
 <div class="meteor" aria-hidden="true"></div>
 
-<header class="hero">
+<nav class="topbar" aria-label="Idioma / Language">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#top">C4 TIMER</a>
+    <div class="lang">
+      <a href="./" hreflang="pt-BR" lang="pt-BR" data-lang="pt" aria-current="page">PT</a>
+      <a href="en/" hreflang="en" lang="en" data-lang="en" >EN</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
   <div class="wrap hero-grid">
     <div class="hero-text">
       <p class="eyebrow">Plugin grátis para Ulanzi D200</p>
@@ -603,22 +632,46 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
 
 <script>
 /* Contador de downloads: soma os downloads do ZIP em todas as versões
-   publicadas na aba Releases do GitHub. Guarda o resultado por 10 minutos
+   publicadas na aba Releases do GitHub. Guarda o resultado por 2 minutos
    no navegador para não gastar o limite da API do GitHub. */
 (function () {
+  var EN = document.documentElement.lang === "en";
+  var T = EN
+    ? { one: " download", many: " downloads", latest: "Current version: ", title: "Plugin downloads",
+        fail: 'Count unavailable right now. See the <a href="https://github.com/murar0/cs2-c4-timer/releases">releases page</a>.',
+        thanks: "Thanks for downloading! GitHub may take a few minutes to count it.", locale: "en-US" }
+    : { one: " download", many: " downloads", latest: "Versão atual: ", title: "Downloads do plugin",
+        fail: 'Contagem indisponível agora. Veja na <a href="https://github.com/murar0/cs2-c4-timer/releases">página de versões</a>.',
+        thanks: "Valeu por baixar! O GitHub pode levar alguns minutos para contar o seu download.", locale: "pt-BR" };
   var API = "https://api.github.com/repos/murar0/cs2-c4-timer/releases?per_page=100";
   var KEY = "c4timer-downloads";
+  var CACHE_MS = 2 * 60 * 1000;
   var lcd = document.getElementById("dl-lcd");
   var title = document.getElementById("dl-title");
   var note = document.getElementById("dl-note");
-  var fmt = new Intl.NumberFormat("pt-BR");
+  var text = document.getElementById("dl-text");
+  var fmt = new Intl.NumberFormat(T.locale);
+
+  // quem clica em baixar força uma contagem nova na próxima visita
+  document.querySelectorAll('a[href*="/releases/latest/download/"]').forEach(function (a) {
+    a.addEventListener("click", function () {
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      text.textContent = T.thanks;
+    });
+  });
+  // guarda a escolha de idioma
+  document.querySelectorAll(".lang a").forEach(function (a) {
+    a.addEventListener("click", function () {
+      try { localStorage.setItem("c4timer-lang", a.getAttribute("data-lang")); } catch (e) {}
+    });
+  });
 
   function show(total, latest) {
     var target = Math.max(0, total | 0);
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var pad = function (n) { return String(n).padStart(6, "0"); };
-    title.textContent = fmt.format(target) + (target === 1 ? " download" : " downloads");
-    if (latest) note.textContent = "Versão atual: " + latest;
+    title.textContent = fmt.format(target) + (target === 1 ? T.one : T.many);
+    if (latest) note.textContent = T.latest + latest;
     if (reduce || target === 0) { lcd.textContent = pad(target); return; }
     var start = performance.now(), dur = 1200;
     (function step(now) {
@@ -627,16 +680,15 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
       if (k < 1) requestAnimationFrame(step);
     })(start);
   }
-
   function fail() {
     lcd.textContent = "------";
-    title.textContent = "Downloads do plugin";
-    note.innerHTML = 'Contagem indisponível agora. Veja na <a href="https://github.com/murar0/cs2-c4-timer/releases">página de versões</a>.';
+    title.textContent = T.title;
+    note.innerHTML = T.fail;
   }
 
   try {
     var cached = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (cached && Date.now() - cached.at < 10 * 60 * 1000) { show(cached.total, cached.latest); return; }
+    if (cached && Date.now() - cached.at < CACHE_MS) { show(cached.total, cached.latest); return; }
   } catch (e) { /* sem armazenamento, segue para a API */ }
 
   fetch(API, { headers: { Accept: "application/vnd.github+json" } })

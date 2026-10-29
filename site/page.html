@@ -1,7 +1,10 @@
 <title>C4 Timer para Ulanzi</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Plugin gratuito que mostra o tempo da C4 do Counter-Strike 2 nas teclas do Ulanzi D200, em pixel art 8-bit.">
-<link rel="icon" href="img/icone.png">
+<link rel="icon" href="{{ROOT}}img/icone.png">
+<link rel="alternate" hreflang="pt-BR" href="https://murar0.github.io/cs2-c4-timer/">
+<link rel="alternate" hreflang="en" href="https://murar0.github.io/cs2-c4-timer/en/">
+{{AUTOLANG}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
@@ -109,6 +112,23 @@ p { margin: 0 0 14px; max-width: 65ch; }
 .btn.alt { background: var(--panel); color: var(--fg); box-shadow: 0 var(--px) 0 var(--edge), 0 calc(var(--px) * 2) 0 var(--ink); }
 .btns { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
 .small-note { font-family: var(--mono); font-size: 1.2rem; color: var(--slate); margin-top: 18px; }
+
+/* ---------------- barra do topo e idioma ---------------- */
+.topbar { border-bottom: 2px solid var(--edge); background: rgba(20, 22, 38, .85); }
+.topbar-in { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 10px; }
+.brand { font-family: var(--display); font-size: .8rem; color: var(--yellow); text-decoration: none; letter-spacing: .04em; }
+.lang { display: flex; gap: 6px; }
+.lang a {
+  font-family: var(--display);
+  font-size: .7rem;
+  padding: 8px 10px;
+  color: var(--steel);
+  text-decoration: none;
+  border: 2px solid var(--edge);
+  background: var(--panel);
+}
+.lang a:hover { color: var(--fg); border-color: var(--slate); }
+.lang a[aria-current="page"] { color: var(--ink); background: var(--yellow); border-color: var(--yellow); box-shadow: 0 3px 0 var(--orange); }
 
 /* ---------------- herói ---------------- */
 .hero { padding-block: 56px 40px; }
@@ -354,7 +374,17 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
 
 <div class="meteor" aria-hidden="true"></div>
 
-<header class="hero">
+<nav class="topbar" aria-label="Idioma / Language">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#top">C4 TIMER</a>
+    <div class="lang">
+      <a href="{{HREF_PT}}" hreflang="pt-BR" lang="pt-BR" data-lang="pt" {{CUR_PT}}>PT</a>
+      <a href="{{HREF_EN}}" hreflang="en" lang="en" data-lang="en" {{CUR_EN}}>EN</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
   <div class="wrap hero-grid">
     <div class="hero-text">
       <p class="eyebrow">Plugin grátis para Ulanzi D200</p>
@@ -373,8 +403,8 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
           <div class="key"><i></i></div>
           <div class="key"><i></i></div>
           <div class="key"><i></i></div>
-          <div class="key"><img class="pix l" src="img/hero.gif" alt=""></div>
-          <div class="key"><img class="pix r" src="img/hero.gif" alt=""></div>
+          <div class="key"><img class="pix l" src="{{ROOT}}img/hero.gif" alt=""></div>
+          <div class="key"><img class="pix r" src="{{ROOT}}img/hero.gif" alt=""></div>
           <div class="key"><i></i></div>
           <div class="key"><i></i></div>
           <div class="key k-blue"><i></i></div>
@@ -383,7 +413,7 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
           <div class="key"><i></i></div>
           <div class="key"><i></i></div>
           <div class="key"><i></i></div>
-          <div class="key window"><img class="pix" src="img/janela.png" alt=""></div>
+          <div class="key window"><img class="pix" src="{{ROOT}}img/janela.png" alt=""></div>
         </div>
       </div>
       <p class="deck-caption">Tecla larga: duas teclas viram uma tela só</p>
@@ -415,9 +445,9 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
       <h2>Três cores, uma decisão</h2>
       <p>A cor diz se ainda dá tempo de defusar. As marcas na barra são os limites de 10 segundos (sem kit) e 5 segundos (com kit). Uma margem de 0,3s antecipa a troca de cor para cobrir o seu tempo de reação.</p>
       <div class="states">
-        <div class="state"><div class="keys-row" role="img" aria-label="Tecla verde com 27 segundos e o aviso DÁ SEM KIT"><div class="keycap"><img class="pix l" src="img/estado-verde.png" alt=""></div><div class="keycap"><img class="pix r" src="img/estado-verde.png" alt=""></div></div><div><h3 class="c-green">VERDE</h3><p>10s ou mais. Dá para defusar sem kit.</p></div></div>
-        <div class="state"><div class="keys-row" role="img" aria-label="Tecla amarela com 8 segundos e o aviso SÓ COM KIT"><div class="keycap"><img class="pix l" src="img/estado-amarelo.png" alt=""></div><div class="keycap"><img class="pix r" src="img/estado-amarelo.png" alt=""></div></div><div><h3 class="c-yellow">AMARELO</h3><p>Entre 10s e 5s. Só dá com kit. Se você é CT e tem kit, aparece USE SEU KIT.</p></div></div>
-        <div class="state"><div class="keys-row" role="img" aria-label="Tecla vermelha com 3 segundos e o aviso SEM TEMPO"><div class="keycap"><img class="pix l" src="img/estado-vermelho.png" alt=""></div><div class="keycap"><img class="pix r" src="img/estado-vermelho.png" alt=""></div></div><div><h3 class="c-red">VERMELHO</h3><p>Menos de 5s. Não dá mais, nem com kit. Hora de sair.</p></div></div>
+        <div class="state"><div class="keys-row" role="img" aria-label="Tecla verde com 27 segundos e o aviso DÁ SEM KIT"><div class="keycap"><img class="pix l" src="{{ROOT}}img/estado-verde.png" alt=""></div><div class="keycap"><img class="pix r" src="{{ROOT}}img/estado-verde.png" alt=""></div></div><div><h3 class="c-green">VERDE</h3><p>10s ou mais. Dá para defusar sem kit.</p></div></div>
+        <div class="state"><div class="keys-row" role="img" aria-label="Tecla amarela com 8 segundos e o aviso SÓ COM KIT"><div class="keycap"><img class="pix l" src="{{ROOT}}img/estado-amarelo.png" alt=""></div><div class="keycap"><img class="pix r" src="{{ROOT}}img/estado-amarelo.png" alt=""></div></div><div><h3 class="c-yellow">AMARELO</h3><p>Entre 10s e 5s. Só dá com kit. Se você é CT e tem kit, aparece USE SEU KIT.</p></div></div>
+        <div class="state"><div class="keys-row" role="img" aria-label="Tecla vermelha com 3 segundos e o aviso SEM TEMPO"><div class="keycap"><img class="pix l" src="{{ROOT}}img/estado-vermelho.png" alt=""></div><div class="keycap"><img class="pix r" src="{{ROOT}}img/estado-vermelho.png" alt=""></div></div><div><h3 class="c-red">VERMELHO</h3><p>Menos de 5s. Não dá mais, nem com kit. Hora de sair.</p></div></div>
       </div>
     </div>
   </section>
@@ -427,13 +457,13 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
       <p class="eyebrow">Arte 8-bit original</p>
       <h2>Cada momento tem a sua animação</h2>
       <div class="anims">
-        <figure class="anim"><div class="keys-row"><div class="keycap"><img class="pix" src="img/t.gif" alt="Boneco TR de balaclava segurando a C4 no deserto" loading="lazy"></div></div><figcaption>Você é TR</figcaption></figure>
-        <figure class="anim"><div class="keys-row"><div class="keycap"><img class="pix" src="img/ct.gif" alt="Boneco CT de capacete numa noite estrelada" loading="lazy"></div></div><figcaption>Você é CT</figcaption></figure>
-        <figure class="anim"><div class="keys-row"><div class="keycap"><img class="pix" src="img/boom.gif" alt="Explosão da C4 com clarão e BOOM" loading="lazy"></div></div><figcaption>Explodiu</figcaption></figure>
-        <figure class="anim"><div class="keys-row"><div class="keycap"><img class="pix" src="img/defuse.gif" alt="Fio cortado, check verde e DEFUSADA" loading="lazy"></div></div><figcaption>Defusada</figcaption></figure>
+        <figure class="anim"><div class="keys-row"><div class="keycap"><img class="pix" src="{{ROOT}}img/t.gif" alt="Boneco TR de balaclava segurando a C4 no deserto" loading="lazy"></div></div><figcaption>Você é TR</figcaption></figure>
+        <figure class="anim"><div class="keys-row"><div class="keycap"><img class="pix" src="{{ROOT}}img/ct.gif" alt="Boneco CT de capacete numa noite estrelada" loading="lazy"></div></div><figcaption>Você é CT</figcaption></figure>
+        <figure class="anim"><div class="keys-row"><div class="keycap"><img class="pix" src="{{ROOT}}img/boom.gif" alt="Explosão da C4 com clarão e BOOM" loading="lazy"></div></div><figcaption>Explodiu</figcaption></figure>
+        <figure class="anim"><div class="keys-row"><div class="keycap"><img class="pix" src="{{ROOT}}img/defuse.gif" alt="Fio cortado, check verde e DEFUSADA" loading="lazy"></div></div><figcaption>Defusada</figcaption></figure>
       </div>
       <div class="anim-row2">
-        <figure class="anim star" style="margin:0"><div class="keys-row big" role="img" aria-label="Estrela cadente cruzando o céu da tela do TR, nas duas teclas"><div class="keycap"><img class="pix l" src="img/estrela.gif" alt="" loading="lazy"></div><div class="keycap"><img class="pix r" src="img/estrela.gif" alt="" loading="lazy"></div></div><figcaption>A cada 4 a 6 minutos, uma estrela cadente cruza o céu</figcaption></figure>
+        <figure class="anim star" style="margin:0"><div class="keys-row big" role="img" aria-label="Estrela cadente cruzando o céu da tela do TR, nas duas teclas"><div class="keycap"><img class="pix l" src="{{ROOT}}img/estrela.gif" alt="" loading="lazy"></div><div class="keycap"><img class="pix r" src="{{ROOT}}img/estrela.gif" alt="" loading="lazy"></div></div><figcaption>A cada 4 a 6 minutos, uma estrela cadente cruza o céu</figcaption></figure>
         <div class="callout">
           <h3>Por que não pisca</h3>
           <p>Cada imagem que chega ao D200 faz a tecla piscar enquanto ele redesenha. Por isso o plugin manda a contagem inteira de uma vez, como animação, no momento do plant. O próprio deck anima sozinho.</p>
@@ -460,26 +490,26 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
           <h3>Copie para a pasta de plugins</h3>
           <p>Aperte <code>Win + R</code>, cole <span class="path">%APPDATA%\Ulanzi\UlanziDeck\Plugins</span> e dê Enter. Copie a pasta <code>com.ulanzi.cs2c4.ulanziPlugin</code> para dentro. Abrindo a pasta copiada, o <code>manifest.json</code> precisa aparecer logo de cara.</p>
           <div class="shots two">
-            <figure class="print"><img src="img/prints/1-executar.png" alt="Janela Executar do Windows com o caminho da pasta de plugins" width="408" height="216" loading="lazy"><figcaption>Win + R com o caminho</figcaption></figure>
-            <figure class="print"><img src="img/prints/2-pasta-plugins.png" alt="Pasta Plugins com a pasta com.ulanzi.cs2c4.ulanziPlugin destacada" width="767" height="424" loading="lazy"><figcaption>A pasta do plugin junto com as outras</figcaption></figure>
+            <figure class="print"><img src="{{ROOT}}img/prints/1-executar.png" alt="Janela Executar do Windows com o caminho da pasta de plugins" width="408" height="216" loading="lazy"><figcaption>Win + R com o caminho</figcaption></figure>
+            <figure class="print"><img src="{{ROOT}}img/prints/2-pasta-plugins.png" alt="Pasta Plugins com a pasta com.ulanzi.cs2c4.ulanziPlugin destacada" width="767" height="424" loading="lazy"><figcaption>A pasta do plugin junto com as outras</figcaption></figure>
           </div>
         </div></li>
         <li class="step"><div class="step-body">
           <h3>Coloque nas teclas</h3>
           <p>Abra o Ulanzi Studio. Na categoria <b>CS2 C4 Timer</b>, arraste <b>Timer da C4</b> para uma tecla, ou para duas teclas vizinhas na mesma linha para ter a tecla larga. Ele junta as duas sozinho.</p>
-          <div class="shots"><figure class="print"><img src="img/prints/3-arrastar.jpg" alt="Ulanzi Studio: arrastando Timer da C4 da categoria CS2 C4 Timer para uma tecla" width="1309" height="811" loading="lazy"><figcaption>Arraste "Timer da C4" para a tecla</figcaption></figure></div>
+          <div class="shots"><figure class="print"><img src="{{ROOT}}img/prints/3-arrastar.jpg" alt="Ulanzi Studio: arrastando Timer da C4 da categoria CS2 C4 Timer para uma tecla" width="1309" height="811" loading="lazy"><figcaption>Arraste "Timer da C4" para a tecla</figcaption></figure></div>
         </div></li>
         <li class="step"><div class="step-body">
           <h3>Ligue ao CS2</h3>
           <p>Clique na tecla e aperte <b>Instalar no CS2</b>. O plugin encontra a pasta do jogo na Steam e grava um arquivo de configuração. Se não achar, use <b>Ver arquivo .cfg</b> e salve o texto em <span class="path">...\Counter-Strike Global Offensive\game\csgo\cfg</span>.</p>
-          <div class="shots"><figure class="print"><img src="img/prints/4-instalar.jpg" alt="Painel da tecla com o botão Instalar no CS2 destacado" width="1302" height="816" loading="lazy"><figcaption>Clique na tecla e aperte "Instalar no CS2"</figcaption></figure></div>
+          <div class="shots"><figure class="print"><img src="{{ROOT}}img/prints/4-instalar.jpg" alt="Painel da tecla com o botão Instalar no CS2 destacado" width="1302" height="816" loading="lazy"><figcaption>Clique na tecla e aperte "Instalar no CS2"</figcaption></figure></div>
         </div></li>
         <li class="step"><div class="step-body">
           <h3>Reinicie o CS2 e teste</h3>
           <p>Com o jogo aberto, o painel mostra <b>CS2: conectado</b>. Para testar sem jogar, aperte a própria tecla: roda uma simulação de 40 segundos. Assista até o fim.</p>
           <div class="shots">
-            <figure class="print"><img src="img/prints/5-conectado.jpg" alt="Painel mostrando CS2: conectado com o jogo aberto" width="1450" height="918" loading="lazy"><figcaption>Com o jogo aberto: "CS2: conectado"</figcaption></figure>
-            <figure class="print"><img src="img/prints/6-no-jogo.jpg" alt="Partida do CS2 com a C4 plantada e as duas teclas mostrando 32 e DÁ SEM KIT" width="1500" height="804" loading="lazy"><figcaption>C4 plantada: as duas teclas já estão contando</figcaption></figure>
+            <figure class="print"><img src="{{ROOT}}img/prints/5-conectado.jpg" alt="Painel mostrando CS2: conectado com o jogo aberto" width="1450" height="918" loading="lazy"><figcaption>Com o jogo aberto: "CS2: conectado"</figcaption></figure>
+            <figure class="print"><img src="{{ROOT}}img/prints/6-no-jogo.jpg" alt="Partida do CS2 com a C4 plantada e as duas teclas mostrando 32 e DÁ SEM KIT" width="1500" height="804" loading="lazy"><figcaption>C4 plantada: as duas teclas já estão contando</figcaption></figure>
           </div>
         </div></li>
       </ol>
@@ -578,7 +608,7 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
 <footer>
   <div class="wrap">
     <div class="credit">
-      <img class="pix" src="img/icone.png" alt="" width="98" height="98">
+      <img class="pix" src="{{ROOT}}img/icone.png" alt="" width="98" height="98">
       <div>
         <p class="eyebrow">Créditos</p>
         <h2>Criado por Felipe Muraro</h2>
@@ -596,22 +626,46 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
 
 <script>
 /* Contador de downloads: soma os downloads do ZIP em todas as versões
-   publicadas na aba Releases do GitHub. Guarda o resultado por 10 minutos
+   publicadas na aba Releases do GitHub. Guarda o resultado por 2 minutos
    no navegador para não gastar o limite da API do GitHub. */
 (function () {
+  var EN = document.documentElement.lang === "en";
+  var T = EN
+    ? { one: " download", many: " downloads", latest: "Current version: ", title: "Plugin downloads",
+        fail: 'Count unavailable right now. See the <a href="https://github.com/{{REPO}}/releases">releases page</a>.',
+        thanks: "Thanks for downloading! GitHub may take a few minutes to count it.", locale: "en-US" }
+    : { one: " download", many: " downloads", latest: "Versão atual: ", title: "Downloads do plugin",
+        fail: 'Contagem indisponível agora. Veja na <a href="https://github.com/{{REPO}}/releases">página de versões</a>.',
+        thanks: "Valeu por baixar! O GitHub pode levar alguns minutos para contar o seu download.", locale: "pt-BR" };
   var API = "https://api.github.com/repos/{{REPO}}/releases?per_page=100";
   var KEY = "c4timer-downloads";
+  var CACHE_MS = 2 * 60 * 1000;
   var lcd = document.getElementById("dl-lcd");
   var title = document.getElementById("dl-title");
   var note = document.getElementById("dl-note");
-  var fmt = new Intl.NumberFormat("pt-BR");
+  var text = document.getElementById("dl-text");
+  var fmt = new Intl.NumberFormat(T.locale);
+
+  // quem clica em baixar força uma contagem nova na próxima visita
+  document.querySelectorAll('a[href*="/releases/latest/download/"]').forEach(function (a) {
+    a.addEventListener("click", function () {
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      text.textContent = T.thanks;
+    });
+  });
+  // guarda a escolha de idioma
+  document.querySelectorAll(".lang a").forEach(function (a) {
+    a.addEventListener("click", function () {
+      try { localStorage.setItem("c4timer-lang", a.getAttribute("data-lang")); } catch (e) {}
+    });
+  });
 
   function show(total, latest) {
     var target = Math.max(0, total | 0);
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var pad = function (n) { return String(n).padStart(6, "0"); };
-    title.textContent = fmt.format(target) + (target === 1 ? " download" : " downloads");
-    if (latest) note.textContent = "Versão atual: " + latest;
+    title.textContent = fmt.format(target) + (target === 1 ? T.one : T.many);
+    if (latest) note.textContent = T.latest + latest;
     if (reduce || target === 0) { lcd.textContent = pad(target); return; }
     var start = performance.now(), dur = 1200;
     (function step(now) {
@@ -620,16 +674,15 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
       if (k < 1) requestAnimationFrame(step);
     })(start);
   }
-
   function fail() {
     lcd.textContent = "------";
-    title.textContent = "Downloads do plugin";
-    note.innerHTML = 'Contagem indisponível agora. Veja na <a href="https://github.com/{{REPO}}/releases">página de versões</a>.';
+    title.textContent = T.title;
+    note.innerHTML = T.fail;
   }
 
   try {
     var cached = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (cached && Date.now() - cached.at < 10 * 60 * 1000) { show(cached.total, cached.latest); return; }
+    if (cached && Date.now() - cached.at < CACHE_MS) { show(cached.total, cached.latest); return; }
   } catch (e) { /* sem armazenamento, segue para a API */ }
 
   fetch(API, { headers: { Accept: "application/vnd.github+json" } })
