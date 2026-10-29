@@ -159,6 +159,52 @@ p { margin: 0 0 14px; max-width: 65ch; }
 .key.window img { object-fit: cover; }
 .deck-caption { font-family: var(--mono); font-size: 1.15rem; color: var(--slate); text-align: center; margin-top: 12px; }
 
+/* ---------------- contador de downloads ---------------- */
+.counter-band { padding-block: 8px 24px; }
+.counter {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 28px;
+  align-items: center;
+  background: var(--panel);
+  border: 2px solid var(--edge);
+  padding: 22px 24px;
+}
+/* visor no estilo da tela da C4 */
+.lcd {
+  background: #8a8f5a;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 var(--px) 0 #5b5e3a;
+  min-width: 0;
+}
+.lcd-screen {
+  background: #0b160e;
+  border-radius: 4px;
+  padding: 16px 18px 14px;
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  line-height: 1;
+  color: #38d16a;
+  text-shadow: 0 0 8px rgba(56, 209, 106, .45);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  position: relative;
+}
+.lcd-screen .ghost { position: absolute; inset: 16px 18px 14px; color: #13301c; text-shadow: none; z-index: 0; }
+.lcd-screen .val { position: relative; z-index: 1; }
+.lcd-led { display: flex; gap: 6px; margin-top: 8px; justify-content: flex-end; }
+.lcd-led i { width: 10px; height: 10px; border-radius: 2px; background: #5b5e3a; display: block; }
+.lcd-led i.on { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.counter h2 { margin-bottom: 8px; }
+.counter p { margin: 0; color: var(--steel); }
+.counter .counter-note { font-family: var(--mono); font-size: 1.15rem; color: var(--slate); margin-top: 8px; }
+@media (max-width: 640px) {
+  .counter { grid-template-columns: 1fr; gap: 18px; }
+}
+
+
 /* teclas de prévia: sempre quadradas, como no aparelho (196 x 196) */
 .keys-row { display: flex; gap: 10px; padding: 10px; background: linear-gradient(#2a2d36, #1d1f26); border-radius: 16px; width: fit-content; max-width: 100%; }
 .keycap { aspect-ratio: 1; width: 120px; max-width: 100%; border-radius: 10px; overflow: hidden; background: #121318; box-shadow: 0 0 0 1px #2c2f38; flex: 0 1 auto; min-width: 0; }
@@ -322,7 +368,7 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
       <h1>C4 TIMER<span>Counter-Strike 2</span></h1>
       <p class="lead">O tempo da C4 nas teclas do seu deck, em pixel art 8-bit. Verde dá sem kit, amarelo só com kit, vermelho não dá mais. Leitura de relance, sem tirar o olho do jogo.</p>
       <div class="btns">
-        <a class="btn" href="download/com.ulanzi.cs2c4.ulanziPlugin.zip">Baixar v1.3.1</a>
+        <a class="btn" href="https://github.com/murar0/cs2-c4-timer/releases/latest/download/com.ulanzi.cs2c4.ulanziPlugin.zip">Baixar v1.3.1</a>
         <a class="btn alt" href="#instalar">Como instalar</a>
       </div>
       <p class="small-note">Windows · Ulanzi Studio 2.1+ · funciona offline</p>
@@ -351,6 +397,23 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
     </div>
   </div>
 </header>
+
+<section class="counter-band" id="downloads" aria-live="polite">
+  <div class="wrap">
+    <div class="counter">
+      <div class="lcd" aria-hidden="true">
+        <div class="lcd-screen"><span class="ghost">888888</span><span class="val" id="dl-lcd">------</span></div>
+        <div class="lcd-led"><i class="on"></i><i></i><i></i></div>
+      </div>
+      <div>
+        <p class="eyebrow">Contador</p>
+        <h2 id="dl-title">Downloads do plugin</h2>
+        <p id="dl-text">Cada download do ZIP é contado pelo próprio GitHub.</p>
+        <p class="counter-note" id="dl-note">Versão atual: v1.3.1</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <main>
   <section id="cores">
@@ -394,7 +457,7 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
       <ol class="steps">
         <li class="step"><div class="step-body">
           <h3>Baixe e extraia</h3>
-          <p>Baixe o <a href="download/com.ulanzi.cs2c4.ulanziPlugin.zip">ZIP do plugin</a>, clique com o botão direito e escolha "Extrair tudo".</p>
+          <p>Baixe o <a href="https://github.com/murar0/cs2-c4-timer/releases/latest/download/com.ulanzi.cs2c4.ulanziPlugin.zip">ZIP do plugin</a>, clique com o botão direito e escolha "Extrair tudo".</p>
         </div></li>
         <li class="step"><div class="step-body">
           <h3>Feche o Ulanzi Studio</h3>
@@ -537,5 +600,58 @@ footer { padding-block: 56px 72px; border-top: 2px solid var(--edge); margin-top
     <p class="fine">Projeto independente, sem ligação com a Valve ou a Ulanzi. Counter-Strike é marca da Valve Corporation. Ulanzi e Ulanzi Studio são marcas da Ulanzi. Usa o SDK de plugins da Ulanzi (Apache 2.0). Toda a arte 8-bit é original do projeto.</p>
   </div>
 </footer>
+
+<script>
+/* Contador de downloads: soma os downloads do ZIP em todas as versões
+   publicadas na aba Releases do GitHub. Guarda o resultado por 10 minutos
+   no navegador para não gastar o limite da API do GitHub. */
+(function () {
+  var API = "https://api.github.com/repos/murar0/cs2-c4-timer/releases?per_page=100";
+  var KEY = "c4timer-downloads";
+  var lcd = document.getElementById("dl-lcd");
+  var title = document.getElementById("dl-title");
+  var note = document.getElementById("dl-note");
+  var fmt = new Intl.NumberFormat("pt-BR");
+
+  function show(total, latest) {
+    var target = Math.max(0, total | 0);
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var pad = function (n) { return String(n).padStart(6, "0"); };
+    title.textContent = fmt.format(target) + (target === 1 ? " download" : " downloads");
+    if (latest) note.textContent = "Versão atual: " + latest;
+    if (reduce || target === 0) { lcd.textContent = pad(target); return; }
+    var start = performance.now(), dur = 1200;
+    (function step(now) {
+      var k = Math.min(1, (now - start) / dur);
+      lcd.textContent = pad(Math.round(target * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) requestAnimationFrame(step);
+    })(start);
+  }
+
+  function fail() {
+    lcd.textContent = "------";
+    title.textContent = "Downloads do plugin";
+    note.innerHTML = 'Contagem indisponível agora. Veja na <a href="https://github.com/murar0/cs2-c4-timer/releases">página de versões</a>.';
+  }
+
+  try {
+    var cached = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (cached && Date.now() - cached.at < 10 * 60 * 1000) { show(cached.total, cached.latest); return; }
+  } catch (e) { /* sem armazenamento, segue para a API */ }
+
+  fetch(API, { headers: { Accept: "application/vnd.github+json" } })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (list) {
+      var total = 0;
+      list.forEach(function (rel) {
+        (rel.assets || []).forEach(function (a) { if (/\.zip$/i.test(a.name)) total += a.download_count || 0; });
+      });
+      var latest = list.length ? list[0].tag_name : "";
+      try { localStorage.setItem(KEY, JSON.stringify({ total: total, latest: latest, at: Date.now() })); } catch (e) {}
+      show(total, latest);
+    })
+    .catch(fail);
+})();
+</script>
 </body>
 </html>

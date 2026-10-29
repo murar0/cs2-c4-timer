@@ -7,7 +7,7 @@
 <p align="center">
   O tempo da C4 do Counter-Strike 2 nas teclas do seu deck, em pixel art 8-bit.<br>
   <a href="https://murar0.github.io/cs2-c4-timer/"><b>Página e manual</b></a> ·
-  <a href="https://murar0.github.io/cs2-c4-timer/download/com.ulanzi.cs2c4.ulanziPlugin.zip"><b>Baixar</b></a> ·
+  <a href="https://github.com/murar0/cs2-c4-timer/releases/latest/download/com.ulanzi.cs2c4.ulanziPlugin.zip"><b>Baixar</b></a> ·
   <a href="https://www.tiktok.com/@mur4r0">TikTok</a>
 </p>
 
@@ -26,7 +26,7 @@
 
 ## Instalação rápida
 
-1. Baixe o [ZIP da versão mais nova](https://murar0.github.io/cs2-c4-timer/download/com.ulanzi.cs2c4.ulanziPlugin.zip) e extraia.
+1. Baixe o [ZIP da versão mais nova](https://github.com/murar0/cs2-c4-timer/releases/latest/download/com.ulanzi.cs2c4.ulanziPlugin.zip) e extraia.
 2. Feche o Ulanzi Studio e copie a pasta `com.ulanzi.cs2c4.ulanziPlugin` para `%APPDATA%\Ulanzi\UlanziDeck\Plugins`.
 3. Abra o Ulanzi Studio e arraste **Timer da C4** para uma tecla (ou duas vizinhas).
 4. Clique na tecla, aperte **Instalar no CS2** e reinicie o jogo.
